@@ -13,7 +13,7 @@ use SudoWP_PostGallery\Public\PostGalleryPublic;
 class PostGallery {
 
 	/**
-	 * SudoWP Modernization: Explicit Property Declaration (PHP 8.2 Fix)
+	 * Explicit Property Declaration (PHP 8.2 Fix)
 	 */
 	protected PostGalleryLoader $loader;
 	protected string $plugin_name;
@@ -46,7 +46,7 @@ class PostGallery {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
         
-        // SudoWP Security: Ensure menu is added securely
+        // Ensure menu is added securely
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 	}
 

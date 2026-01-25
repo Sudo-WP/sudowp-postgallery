@@ -5,7 +5,7 @@ namespace SudoWP_PostGallery\Admin;
 /**
  * The admin-specific functionality of the plugin.
  */
-#[\AllowDynamicProperties] // SudoWP Fix: Prevent PHP 8.2 Deprecation Notices
+#[\AllowDynamicProperties] // Prevent PHP 8.2 Deprecation Notices
 class PostGalleryAdmin {
 
 	private string $plugin_name;
@@ -23,10 +23,10 @@ class PostGalleryAdmin {
 	public function enqueue_scripts(): void {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/post-gallery-admin.js', array( 'jquery' ), $this->version, false );
         
-        // SudoWP Modernization: Pass PHP variables to JS cleanly
+        // Pass PHP variables to JS cleanly
         wp_localize_script( $this->plugin_name, 'sudowp_postgallery_obj', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'nonce'    => wp_create_nonce( 'sudowp_gallery_nonce' ) // Security Hygiene
+            'nonce'    => wp_create_nonce( 'sudowp_gallery_nonce' ) 
         ));
 	}
 

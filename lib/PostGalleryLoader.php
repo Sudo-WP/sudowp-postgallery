@@ -12,7 +12,7 @@ namespace SudoWP_PostGallery\Lib;
  * @author     SudoWP <security@sudowp.com>
  */
 
-// SudoWP Modernization: Enforce Strict Types
+// Enforce Strict Types for reliability
 declare(strict_types=1);
 
 class PostGalleryLoader {
