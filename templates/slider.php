@@ -15,22 +15,22 @@ array_unshift( $images, $first_image );
     <div class="pg-slider owl-theme ow-carousel">
         <?php foreach ( $images as $image ) { ?>
             <img class="gallery-image"
-                    src="<?php echo \Lib\PostGalleryImage::getThumbUrl( $image['path'],
+                    src="<?php echo esc_url( \Lib\PostGalleryImage::getThumbUrl( $image['path'],
                         [
                             'width' => $this->option( 'thumbWidth' ),
                             'height' => $this->option( 'thumbHeight' ),
                             'scale' => $this->option( 'thumbScale' ),
-                        ] );
+                        ] ) );
                     ?>"
-                    alt="<?php echo $image['filename'] ?>"
-                    <?php echo $image['imageOptionsParsed']; ?>
+                    alt="<?php echo esc_attr( $image['filename'] ) ?>"
+                    <?php echo wp_kses_post( $image['imageOptionsParsed'] ); ?>
             />
         <?php } ?>
     </div>
 
     <script>
       jQuery('.pg-slider').owlCarousel({
-          <?php echo $this->option( 'sliderOwlConfig' ); ?>
+          <?php echo wp_kses_post( $this->option( 'sliderOwlConfig' ) ); ?>
       });
     </script>
 </figure>

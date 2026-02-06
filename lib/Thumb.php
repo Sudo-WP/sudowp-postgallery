@@ -47,24 +47,53 @@ class Thumb {
     }
 
     /**
-     * Checks und correct a given filepath
+     * SudoWP Security: Enhanced path validation to prevent directory traversal
+     * Checks and validates a given filepath
      *
-     * @param type $path
-     * @return type
+     * @param string $path
+     * @return string|false
      */
     public function checkPath( $path ) {
         if ( empty( $path ) || !is_string( $path ) ) {
             return false;
         }
+        
+        // Remove URL if present
         $path = str_replace( get_bloginfo( 'wpurl' ), $this->srvDir, $path );
         $path = str_replace( '//', '/', $path );
+        
+        // Build full path if not exists
         if ( !file_exists( $path ) ) {
             $path = $this->srvDir . '/' . $path;
         }
+        
         $path = str_replace( '//', '/', $path );
         $path = str_replace( '%20', ' ', $path );
+        
+        // SudoWP Security: Path traversal prevention
+        // 1. Reject paths containing traversal sequences
+        if ( strpos( $path, '..' ) !== false ) {
+            error_log( 'PostGallery Security: Path traversal attempt detected: ' . $path );
+            return false;
+        }
+        
+        // 2. Resolve the real path and verify it's within allowed directories
+        $realPath = realpath( $path );
+        if ( $realPath === false ) {
+            // File doesn't exist or path is invalid
+            return false;
+        }
+        
+        // 3. Ensure the resolved path is within the uploads directory
+        $uploadsDir = wp_upload_dir();
+        $allowedBasePath = realpath( $uploadsDir['basedir'] );
+        
+        if ( strpos( $realPath, $allowedBasePath ) !== 0 ) {
+            error_log( 'PostGallery Security: Attempted access outside uploads directory: ' . $path );
+            return false;
+        }
 
-        return $path;
+        return $realPath;
     }
 
     /**
@@ -662,14 +691,25 @@ class Thumb {
             $bw = true;
         }
 
-        $path = filter_input( INPUT_GET, 'path' );
-        $width = filter_input( INPUT_GET, 'width' );
-        $height = filter_input( INPUT_GET, 'height' );
+        $path = filter_input( INPUT_GET, 'path', FILTER_SANITIZE_STRING );
+        $width = filter_input( INPUT_GET, 'width', FILTER_SANITIZE_NUMBER_INT );
+        $height = filter_input( INPUT_GET, 'height', FILTER_SANITIZE_NUMBER_INT );
 
+        // SudoWP Security: Validate and sanitize path before urldecode
+        if ( empty( $path ) ) {
+            wp_die( 'Invalid path parameter', 'Security Error', array( 'response' => 400 ) );
+        }
+        
+        // Decode the path
+        $decodedPath = urldecode( $path );
+        
+        // Additional sanitization - remove null bytes and other dangerous characters
+        $decodedPath = str_replace( chr(0), '', $decodedPath );
+        
         $thumbResult = $this->getThumb( [
-            'path' => urldecode( $path ),
-            'width' => ( !empty( $width ) ? $width : 0 ),
-            'height' => ( !empty( $height ) ? $height : 0 ),
+            'path' => $decodedPath,
+            'width' => ( !empty( $width ) ? intval( $width ) : 0 ),
+            'height' => ( !empty( $height ) ? intval( $height ) : 0 ),
             'scale' => $scale,
             'quality' => $quality,
             'bw' => $bw,

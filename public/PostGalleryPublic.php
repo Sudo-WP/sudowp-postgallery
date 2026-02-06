@@ -299,9 +299,9 @@ class PostGalleryPublic {
                 return '';
             }
 
-            $html = '<img width="' . $image['width'] . '" height="' . $image['height'] . '" src="'
-                . $image['url']
-                . '" alt="" class="attachment-' . $image['size'] . $image['orientation'] . ' wp-post-image  post-image-from-postgallery" />';
+            $html = '<img width="' . intval( $image['width'] ) . '" height="' . intval( $image['height'] ) . '" src="'
+                . esc_url( $image['url'] )
+                . '" alt="" class="attachment-' . esc_attr( $image['size'] . $image['orientation'] ) . ' wp-post-image post-image-from-postgallery" />';
         }
 
         return $html;
