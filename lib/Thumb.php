@@ -700,10 +700,14 @@ class Thumb {
             wp_die( 'Invalid path parameter', 'Security Error', array( 'response' => 400 ) );
         }
         
+        // SudoWP Security: Remove encoded null bytes BEFORE urldecode
+        // Attackers could use %00 which would become chr(0) after decoding
+        $path = str_replace( '%00', '', $path );
+        
         // Decode the path
         $decodedPath = urldecode( $path );
         
-        // Additional sanitization - remove null bytes and other dangerous characters
+        // Additional sanitization - remove null bytes (in case of double encoding)
         $decodedPath = str_replace( chr(0), '', $decodedPath );
         
         $thumbResult = $this->getThumb( [

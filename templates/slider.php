@@ -30,7 +30,11 @@ array_unshift( $images, $first_image );
 
     <script>
       jQuery('.pg-slider').owlCarousel({
-          <?php echo wp_kses_post( $this->option( 'sliderOwlConfig' ) ); ?>
+          <?php 
+          // SudoWP Security: Allow JavaScript config but escape to prevent XSS
+          // This is JavaScript object notation, not HTML
+          echo esc_js( $this->option( 'sliderOwlConfig' ) ); 
+          ?>
       });
     </script>
 </figure>

@@ -65,6 +65,9 @@ if ( file_exists( $cacheDir ) && is_dir( $cacheDir ) ) {
         $file = implode( '.', $file );
         $length = strlen( $file );
 
+        // SudoWP Security: Optimize realpath() calls - calculate once outside loop
+        $realCacheDir = realpath( $cacheDir );
+        
         foreach ( $cacheDirContents as $cacheFile ) {
             // Skip . and ..
             if ( $cacheFile === '.' || $cacheFile === '..' ) {
@@ -73,8 +76,10 @@ if ( file_exists( $cacheDir ) && is_dir( $cacheDir ) ) {
             
             if ( substr( $cacheFile, 0, $length ) == $file ) {
                 $cacheFilePath = $cacheDir . $cacheFile;
+                $realCacheFilePath = realpath( $cacheFilePath );
+                
                 // Verify path is within cache directory before deleting
-                if ( realpath( $cacheFilePath ) && strpos( realpath( $cacheFilePath ), realpath( $cacheDir ) ) === 0 ) {
+                if ( $realCacheFilePath && $realCacheDir && strpos( $realCacheFilePath, $realCacheDir ) === 0 ) {
                     unlink( $cacheFilePath );
                 }
             }
