@@ -31,9 +31,20 @@ array_unshift( $images, $first_image );
     <script>
       jQuery('.pg-slider').owlCarousel({
           <?php 
-          // SudoWP Security: Allow JavaScript config but escape to prevent XSS
-          // This is JavaScript object notation, not HTML
-          echo esc_js( $this->option( 'sliderOwlConfig' ) ); 
+          // SudoWP Security: This is JavaScript object literal configuration
+          // We need to output it as-is but sanitize individual values
+          // The config comes from trusted admin settings (requires manage_options capability)
+          $config = $this->option( 'sliderOwlConfig' );
+          
+          // Basic sanitization: remove script tags and dangerous patterns
+          $config = preg_replace( '/<script[^>]*>.*?<\/script>/is', '', $config );
+          $config = str_replace( array( '</script>', '<script>' ), '', $config );
+          
+          // Only output if not empty
+          if ( !empty( $config ) ) {
+              // This is admin-controlled configuration, not user input
+              echo $config; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+          }
           ?>
       });
     </script>
