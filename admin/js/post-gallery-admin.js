@@ -239,7 +239,9 @@ window.deleteImages = function (postid) {
 
   // Check if user confirmed the deletion of all images
   if (answer) {
-    $.post(ajaxurl + "?action=postgalleryDeleteimage&postid=" + postid,
+    $.post(ajaxurl + "?action=postgalleryDeleteimage&postid=" + postid, {
+        nonce: sudowp_postgallery_obj.nonce
+      },
       function (data) {
         $(".sortable-pics").empty();
         $('.sortable-pics').trigger('sortupdate');
@@ -256,7 +258,9 @@ window.deleteImages = function (postid) {
  */
 window.deleteImage = function (element, attachmentId) {
   jQuery(element).addClass('delete-progress');
-  jQuery.post(ajaxurl + "?action=postgalleryDeleteimage&attachmentid=" + attachmentId,
+  jQuery.post(ajaxurl + "?action=postgalleryDeleteimage&attachmentid=" + attachmentId, {
+      nonce: sudowp_postgallery_obj.nonce
+    },
     function (data, textStatus) {
       deleteImageComplete(data, textStatus, element);
     }
@@ -311,7 +315,8 @@ window.renameImage = function (buttonElement) {
     data: {
       action: 'postgalleryRenameimage',
       attachmentId: attachmentId,
-      newfilename: input.val()
+      newfilename: input.val(),
+      nonce: sudowp_postgallery_obj.nonce
     },
     success: function (data, textStatus) {
       renameImageComplete(data, textStatus, item);

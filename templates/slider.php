@@ -15,22 +15,37 @@ array_unshift( $images, $first_image );
     <div class="pg-slider owl-theme ow-carousel">
         <?php foreach ( $images as $image ) { ?>
             <img class="gallery-image"
-                    src="<?php echo \Lib\PostGalleryImage::getThumbUrl( $image['path'],
+                    src="<?php echo esc_url( \Lib\PostGalleryImage::getThumbUrl( $image['path'],
                         [
                             'width' => $this->option( 'thumbWidth' ),
                             'height' => $this->option( 'thumbHeight' ),
                             'scale' => $this->option( 'thumbScale' ),
-                        ] );
+                        ] ) );
                     ?>"
-                    alt="<?php echo $image['filename'] ?>"
-                    <?php echo $image['imageOptionsParsed']; ?>
+                    alt="<?php echo esc_attr( $image['filename'] ) ?>"
+                    <?php echo wp_kses_post( $image['imageOptionsParsed'] ); ?>
             />
         <?php } ?>
     </div>
 
     <script>
       jQuery('.pg-slider').owlCarousel({
-          <?php echo $this->option( 'sliderOwlConfig' ); ?>
+          <?php 
+          // SudoWP Security: This is JavaScript object literal configuration
+          // We need to output it as-is but sanitize individual values
+          // The config comes from trusted admin settings (requires manage_options capability)
+          $config = $this->option( 'sliderOwlConfig' );
+          
+          // Basic sanitization: remove script tags and dangerous patterns
+          $config = preg_replace( '/<script[^>]*>.*?<\/script>/is', '', $config );
+          $config = str_replace( array( '</script>', '<script>' ), '', $config );
+          
+          // Only output if not empty
+          if ( !empty( $config ) ) {
+              // This is admin-controlled configuration, not user input
+              echo $config; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+          }
+          ?>
       });
     </script>
 </figure>

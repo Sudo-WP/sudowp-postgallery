@@ -418,9 +418,14 @@ class PostGalleryImageList {
 
     public static function loadAllAttachmentIds() {
         global $wpdb;
-        $sql = "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = '_wp_attached_file' 
-            AND meta_value LIKE '%gallery/%'";
-
+        
+        // SudoWP Security: Use wpdb->prepare() for SQL query safety
+        $sql = $wpdb->prepare(
+            "SELECT post_id, meta_value FROM $wpdb->postmeta 
+            WHERE meta_key = %s AND meta_value LIKE %s",
+            '_wp_attached_file',
+            '%gallery/%'
+        );
 
         $result = $wpdb->get_results( $sql );
 
