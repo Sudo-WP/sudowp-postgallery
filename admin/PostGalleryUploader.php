@@ -30,7 +30,7 @@ class PostGalleryUploader {
 		$this->postid = filter_input( INPUT_POST, 'postid', FILTER_SANITIZE_NUMBER_INT );
 		$this->uploadDir = $uploads['basedir'];
 		$this->uploadUrl = str_replace( get_bloginfo( 'wpurl' ), '', $uploads['baseurl'] );
-		$this->uploadFolder = filter_input( INPUT_POST, 'uploadFolder', FILTER_SANITIZE_STRING );
+		$this->uploadFolder = filter_input( INPUT_POST, 'uploadFolder', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		$this->uploadedFile = $_FILES['file'];
 

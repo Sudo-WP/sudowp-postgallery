@@ -1,6 +1,9 @@
 <?php
 if ( !defined( 'ABSPATH' ) ) exit;
 
+check_ajax_referer('postgallery_delete', 'nonce');
+if (!current_user_can('delete_posts')) { wp_send_json_error('Unauthorized'); }
+
 // SudoWP Security: Authentication check
 if ( !is_user_logged_in() ) {
     die( 'Login required!' );

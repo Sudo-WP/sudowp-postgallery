@@ -233,6 +233,7 @@ class PostGalleryPublic {
      */
     public function postgalleryThumb() {
         if ( isset( $_REQUEST['loadThumb'] ) ) {
+            if (!is_user_logged_in() || !current_user_can('upload_files')) { wp_die('Unauthorized'); }
             Thumb::theThumb();
             exit();
         }

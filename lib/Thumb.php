@@ -1,4 +1,5 @@
 <?php
+if (!defined('ABSPATH')) { exit; }
 /* * **********************************
  * Author: shennemann
  * Last changed: 04.09.2018 08:49
@@ -42,7 +43,7 @@ class Thumb {
         $this->cacheDir = $uploadDir['basedir'] . '/cache';
         if ( !file_exists( $this->cacheDir ) ) {
             @mkdir( $this->cacheDir );
-            @chmod( $this->cacheDir, octdec( '0777' ) );
+            @chmod( $this->cacheDir, octdec( '0755' ) );
         }
     }
 
@@ -287,7 +288,7 @@ class Thumb {
                 // write image to cache
                 $im->writeImage( $this->cacheDir . '/' . $cachefile );
 
-                @chmod( $this->cacheDir . '/' . $cachefile, octdec( '0666' ) );
+                @chmod( $this->cacheDir . '/' . $cachefile, octdec( '0644' ) );
             }
             $path = $this->cacheDir . '/' . $cachefile;
         }
@@ -636,7 +637,7 @@ class Thumb {
                         break;
                 }
 
-                @chmod( $this->cacheDir . '/' . $cachefile, octdec( '0666' ) );
+                @chmod( $this->cacheDir . '/' . $cachefile, octdec( '0644' ) );
                 imagedestroy( $oldImage );
                 imagedestroy( $newImage );
             }
@@ -663,6 +664,11 @@ class Thumb {
      * Echos the thumb and set header
      */
     public function printThumb() {
+        // SudoWP Security: Authentication and capability check
+        if ( !is_user_logged_in() || !current_user_can( 'upload_files' ) ) {
+            wp_die( 'Unauthorized', 'Unauthorized Access', array( 'response' => 403 ) );
+        }
+
         // Fix wrong keys (beginning with amp;)
         foreach ( $_GET as $key => $value ) {
             $key = str_replace( "amp;", "", $key );
@@ -691,7 +697,7 @@ class Thumb {
             $bw = true;
         }
 
-        $path = filter_input( INPUT_GET, 'path', FILTER_SANITIZE_STRING );
+        $path = filter_input( INPUT_GET, 'path', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
         $width = filter_input( INPUT_GET, 'width', FILTER_SANITIZE_NUMBER_INT );
         $height = filter_input( INPUT_GET, 'height', FILTER_SANITIZE_NUMBER_INT );
 

@@ -1,4 +1,6 @@
-<?php namespace Lib;
+<?php
+if (!defined('ABSPATH')) { exit; }
+namespace Lib;
 
 /**
  * Define the internationalization functionality

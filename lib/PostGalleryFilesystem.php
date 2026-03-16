@@ -1,4 +1,5 @@
 <?php
+if (!defined('ABSPATH')) { exit; }
 /**
  * @since 1.0.0
  * @author shennemann
@@ -80,7 +81,7 @@ class PostGalleryFilesystem {
             if ( file_exists( $oldDir ) ) {
                 $files = scandir( $oldDir );
                 @mkdir( $newDir );
-                @chmod( $newDir, octdec( '0777' ) );
+                @chmod( $newDir, octdec( '0755' ) );
 
                 foreach ( $files as $file ) {
                     if ( !is_dir( $oldDir . '/' . $file ) ) {
