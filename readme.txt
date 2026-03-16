@@ -4,7 +4,7 @@ Original Authors: RTO GmbH
 Tags: gallery, post gallery, security-fork, upload-fix, patched
 Requires at least: 5.8
 Tested up to: 6.7
-Stable tag: 1.12.6
+Stable tag: 1.12.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,15 @@ Yes, it is a direct drop-in replacement. However, you should delete the original
 The original plugin was closed by the WordPress Security Team on December 2, 2025, due to the unpatched security issues we have fixed in this fork.
 
 == Changelog ==
+
+= 1.12.7 (March 2026) =
+* Security: Added authentication check on printThumb and postgalleryThumb endpoints.
+* Security: Added nonce verification and capability check on delete handler.
+* Hardening: Changed directory permissions from 0777 to 0755.
+* Hardening: Changed file permissions from 0666 to 0644.
+* Hardening: Replaced deprecated FILTER_SANITIZE_STRING with sanitize_text_field.
+* Hardening: Added EXTR_SKIP flag to all extract() calls.
+* Hardening: Added ABSPATH guards on 8 files to prevent direct access.
 
 = 1.12.6 (SudoWP Edition) =
 * Security Fix: Patched Critical Arbitrary File Upload (CVE-2025-13543).

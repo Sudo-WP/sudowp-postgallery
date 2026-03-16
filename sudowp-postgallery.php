@@ -13,14 +13,14 @@ use Lib\PostGalleryDeactivator;
  * that starts the plugin.
  *
  * @link              https://sudowp.com
- * @since             1.12.6
+ * @since             1.12.7
  * @package           PostGallery
  *
  * @wordpress-plugin
  * Plugin Name:       SudoWP PostGallery (Security Fork)
  * Plugin URI:        https://github.com/Sudo-WP/sudowp-postgallery
  * Description:       A security-hardened fork of the abandoned PostGallery plugin. Fixes critical Arbitrary File Upload vulnerabilities (CVE-2025-13543).
- * Version:           1.12.6
+ * Version:           1.12.7
  * Author:            SudoWP, WP Republic
  * Author URI:        https://sudowp.com
  * License:           GPL-2.0+
